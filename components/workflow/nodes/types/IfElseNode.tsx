@@ -28,9 +28,9 @@ export function IfElseNode({ data }: IfElseNodeProps) {
   const { cases } = data;
 
   // 노드 ID로 노드 제목 가져오기
-  const getNodeTitle = (nodeId: string) => {
+  const getNodeTitle = (nodeId: string): string => {
     const node = nodes.find((n) => n.id === nodeId);
-    return node?.data?.title || nodeId.slice(0, 8);
+    return (node?.data?.title as string) || nodeId.slice(0, 8);
   };
 
   if (!cases || cases.length === 0) {

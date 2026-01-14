@@ -18,16 +18,18 @@ export function MarkdownContent({ content }: MarkdownContentProps) {
         ul: ({ children }) => <ul className="list-disc pl-5 mb-2 space-y-1">{children}</ul>,
         ol: ({ children }) => <ol className="list-decimal pl-5 mb-2 space-y-1">{children}</ol>,
         li: ({ children }) => <li className="leading-relaxed">{children}</li>,
-        code: ({ inline, children }) =>
-          inline ? (
-            <code className="bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded text-xs font-mono">
-              {children}
-            </code>
-          ) : (
+        code: ({ className, children }) => {
+          const isBlock = className?.includes('language-');
+          return isBlock ? (
             <code className="block bg-gray-100 text-gray-800 p-3 rounded-lg text-xs font-mono overflow-x-auto">
               {children}
             </code>
-          ),
+          ) : (
+            <code className="bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded text-xs font-mono">
+              {children}
+            </code>
+          );
+        },
         pre: ({ children }) => <pre className="mb-2">{children}</pre>,
         blockquote: ({ children }) => (
           <blockquote className="border-l-4 border-gray-300 pl-4 italic text-gray-600 my-2">
