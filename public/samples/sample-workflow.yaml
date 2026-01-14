@@ -1,0 +1,155 @@
+version: "0.1.2"
+kind: app
+
+app:
+  name: "Sample Workflow"
+  mode: workflow
+  description: "샘플 워크플로우 - 사용자 질문에 답변하는 간단한 예제"
+
+workflow:
+  name: "Sample Workflow"
+  description: "사용자 질문을 처리하고 답변을 생성하는 워크플로우"
+  environment_variables: []
+  conversation_variables: []
+  graph:
+    viewport:
+      x: 0
+      y: 0
+      zoom: 1
+    nodes:
+      - id: "start-001"
+        position:
+          x: 50
+          y: 200
+        data:
+          type: start
+          title: "시작"
+          desc: "워크플로우 시작점"
+          variables:
+            - variable: query
+              type: string
+              required: true
+              label: "사용자 질문"
+
+      - id: "llm-001"
+        position:
+          x: 400
+          y: 200
+        data:
+          type: llm
+          title: "질문 분석"
+          desc: "사용자 질문을 분석합니다"
+          model:
+            provider: openai
+            name: gpt-4
+          prompt_template:
+            - role: system
+              text: "당신은 질문을 분석하는 AI 어시스턴트입니다."
+            - role: user
+              text: "다음 질문을 분석해주세요: {{#start-001.query#}}"
+          memory:
+            window:
+              enabled: false
+          context:
+            enabled: false
+          vision:
+            enabled: false
+
+      - id: "if-else-001"
+        position:
+          x: 750
+          y: 200
+        data:
+          type: if-else
+          title: "조건 분기"
+          desc: "질문 유형에 따라 분기합니다"
+          cases:
+            - case_id: "case1"
+              logical_operator: and
+              conditions:
+                - variable_selector:
+                    - llm-001
+                    - text
+                  comparison_operator: contains
+                  value: "기술"
+            - case_id: "default"
+              logical_operator: and
+              conditions: []
+
+      - id: "code-001"
+        position:
+          x: 1100
+          y: 100
+        data:
+          type: code
+          title: "데이터 처리"
+          desc: "기술 질문 처리"
+          code_language: python3
+          code: |
+            def main(input_text: str) -> dict:
+                result = process_technical_query(input_text)
+                return {"result": result}
+          outputs:
+            result:
+              type: string
+
+      - id: "answer-001"
+        position:
+          x: 1100
+          y: 300
+        data:
+          type: answer
+          title: "일반 답변"
+          desc: "일반 질문에 대한 답변"
+          answer: "{{#llm-001.text#}}"
+
+      - id: "end-001"
+        position:
+          x: 1450
+          y: 200
+        data:
+          type: end
+          title: "종료"
+          desc: "워크플로우 종료"
+          outputs:
+            - variable: answer
+              value_selector:
+                - llm-001
+                - text
+
+    edges:
+      - id: "edge-001"
+        source: "start-001"
+        target: "llm-001"
+        sourceHandle: "source"
+        targetHandle: "target"
+
+      - id: "edge-002"
+        source: "llm-001"
+        target: "if-else-001"
+        sourceHandle: "source"
+        targetHandle: "target"
+
+      - id: "edge-003"
+        source: "if-else-001"
+        target: "code-001"
+        sourceHandle: "case1"
+        targetHandle: "target"
+
+      - id: "edge-004"
+        source: "if-else-001"
+        target: "answer-001"
+        sourceHandle: "default"
+        targetHandle: "target"
+
+      - id: "edge-005"
+        source: "code-001"
+        target: "end-001"
+        sourceHandle: "source"
+        targetHandle: "target"
+
+      - id: "edge-006"
+        source: "answer-001"
+        target: "end-001"
+        sourceHandle: "source"
+        targetHandle: "target"
