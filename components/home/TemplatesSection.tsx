@@ -103,7 +103,7 @@ export function TemplatesSection() {
           <span className="text-xs font-medium text-indigo-600">처음이신가요?</span>
         </div>
         <h1 className="text-xl lg:text-2xl font-semibold leading-tight text-gray-900">
-          "처음인데, 뭐부터 해야 하나요?"
+          &quot;처음인데, 뭐부터 해야 하나요?&quot;
         </h1>
         <p className="mt-2 text-gray-500 text-sm">
           샘플 앱을 눌러서 워크플로우 구조를 확인해보세요

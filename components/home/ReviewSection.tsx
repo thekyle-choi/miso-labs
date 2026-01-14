@@ -20,7 +20,7 @@ export function ReviewSection() {
           <span className="text-xs font-medium text-emerald-400">피드백이 필요하신가요?</span>
         </div>
         <h1 className="text-xl lg:text-2xl font-semibold leading-tight text-white">
-          "잘 만들고 있는 건지 모르겠어요"
+          &quot;잘 만들고 있는 건지 모르겠어요&quot;
         </h1>
         <p className="mt-2 text-gray-400 text-sm">
           전문가 피드백으로 확인해보세요
